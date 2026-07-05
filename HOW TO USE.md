@@ -1,9 +1,7 @@
 ## How to setup the mod
-1) Get the lastest .dll on the [release page](https://github.com/PGMProductions/Muck-for-Archipelago/releases/tag/Major-Update)
-2) Dowload and install r2modman
-3) In r2modman select the game muck, create a new profile and install BepInExPack_Muck
-4) In your new profile, go to Settings -> Browse Profile Folder and put the .dll in BepInEx/plugins
-5) Go back to r2modman and press Start Modded, the game should launch with the mod loaded
+1) Dowload and install r2modman
+3) In r2modman select the game muck, create a new profile and install Archipelago_for_Muck
+5) Press Start Modded, the game should launch with the mod loaded
 
 ## How to setup the client
 1) Get the lastest apworld on the [release page](https://github.com/PGMProductions/Muck-for-Archipelago/releases/tag/Major-Update)
