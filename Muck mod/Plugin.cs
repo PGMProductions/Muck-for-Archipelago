@@ -64,21 +64,27 @@ public class Plugin : BaseUnityPlugin
 
     public void Update()
     {
-        if (GameManager.state == GameManager.GameState.Playing)
-        {
-            try
-            {
-                updateGivenPowerups(getPowerupsDict());
-            }
-            catch { };
-            
-        }
+
 
 
         if (previousState == GameManager.GameState.Loading && GameManager.state == GameManager.GameState.Playing)
         {
             atGameStart();
         }
+
+
+
+        if (GameManager.state == GameManager.GameState.Playing)
+        {
+            try
+            {
+                updateGivenPowerups(getPowerupsDict());
+            }
+            catch { }
+            ;
+
+        }
+
 
         //Logger.LogInfo($"Game state : {GameManager.state}");
         previousState = GameManager.state;
