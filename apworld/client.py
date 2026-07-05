@@ -85,7 +85,7 @@ async def locations_checker(ctx: MuckContext):
                         for i in range(1,int(splitLine[1])+1):
                             locations.append(orangePowerupsOffset + i)
                             
-        finally:
+        else:
             await ctx.check_locations(locations)
             
         
