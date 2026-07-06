@@ -2,11 +2,13 @@ from CommonClient import CommonContext as SuperContext, gui_enabled, ClientComma
 import asyncio
 import typing
 
+from tkinter import filedialog
+
 from NetUtils import NetworkItem
 
 from .constants import powerupsOffset,bluePowerupsOffset,orangePowerupsOffset,POWERUPSLIST,ID_TO_ITEM_NAME,ID_TO_LOCATION_NAME,LOCATION_NAME_TO_ID
 
-MUCK_FOLDER_PATH = "C:\\Program Files (x86)\\Steam\\steamapps\\common\Muck"
+MUCK_FOLDER_PATH = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Muck"
 
 class MuckContext(CommonContext):
     tags = {"AP", "Online"}
@@ -84,9 +86,11 @@ async def locations_checker(ctx: MuckContext):
                     elif splitLine[0] == "PowerupOrange":
                         for i in range(1,int(splitLine[1])+1):
                             locations.append(orangePowerupsOffset + i)
-                            
-        else:
+            
             await ctx.check_locations(locations)
+            
+        except:
+            pass
             
         
         locationDict = {"PowerupWhite" : 0, "PowerupBlue" : 0, "PowerupOrange" : 0}
@@ -139,7 +143,7 @@ async def items_checker(ctx: MuckContext):
                     if name != POWERUPSLIST[0]:
                         f.write("\n")
                     f.write(f"{name},{quantity}")
-        finally:
+        except:
             pass
         
         
@@ -184,6 +188,17 @@ def list_received_items(ctx: MuckContext):
 
     
 async def startMuckClient(launch_args):
+    
+    global MUCK_FOLDER_PATH
+    folderFound = False
+    while not folderFound:
+        try:
+            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Powerups.itmlst","r") as f):
+                folderFound = True 
+        except:
+            MUCK_FOLDER_PATH = filedialog.askdirectory(title="Choose Muck Folder")
+
+
     ctx = MuckContext(None, None)
     
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
