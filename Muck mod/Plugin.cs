@@ -13,6 +13,7 @@ using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 using static UnityEngine.GUI;
 using HarmonyLib;
+using System.Threading.Tasks;
 
 namespace ARCHIPELAGO;
 
@@ -21,17 +22,16 @@ namespace ARCHIPELAGO;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    internal static new ManualLogSource Logger;
+    public static new ManualLogSource Logger;
 
     public static Plugin Instance;
 
-    public GameManager.GameState previousState;
-
     public Dictionary<string, int> givenPowerups;
+    public Dictionary<string, int> givenTools;
 
     public Harmony harmony = new Harmony("MUCK-Archipelago");
 
-
+    public bool hasReceivedArrows;
 
     private async void Awake()
     {
@@ -41,23 +41,54 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo("It's muckin' time");
         harmony.PatchAll();
 
-        if (!File.Exists("ARCHIPELAGO_Powerups.itmlst"))
+
+
+
+
+        if (File.Exists("ARCHIPELAGO_Powerups.itmlst"))
         {
-            Logger.LogInfo("Creatinng ARCHIPELAGO_Powerups.itmlst");
-            File.WriteAllText("ARCHIPELAGO_Powerups.itmlst", "Broccoli,0\r\nDumbbell,0\r\nJetpack,0\r\nOrange Juice,0\r\nPeanut Butter,0\r\nBlue Pill,0\r\nRed Pill,0\r\nSneaker,0\r\nRobin Hood Hat,0\r\nSpooo Bean,0\r\nBulldozer,0\r\nHorseshoe,0\r\nDanis Milk,0\r\nPiggybank,0\r\nCrimson Dagger,0\r\nDracula,0\r\nJanniks Frog,0\r\nJuice,0\r\nAdrenaline,0\r\nBerserk,0\r\nCheckered Shirt,0\r\nSniper Scope,0\r\nKnuts Hammer,0\r\nWings of Glory,0\r\nEnforcer,0\r\n");
+            File.Delete("ARCHIPELAGO_Powerups.itmlst");
         }
 
-        if (!File.Exists("ARCHIPELAGO_Locations.lctlst"))
+        if (File.Exists("ARCHIPELAGO_Locations.lctlst"))
         {
-            Logger.LogInfo("Creatinng ARCHIPELAGO_Locations.lctlst");
-            File.WriteAllText("ARCHIPELAGO_Locations.lctlst", "PowerupWhite,0\r\nPowerupBlue,0\r\nPowerupOrange,0\r\n");
+            File.Delete("ARCHIPELAGO_Locations.lctlst");
         }
 
+        if (File.Exists("ARCHIPELAGO_Options.optlst"))
+        {
+            File.Delete("ARCHIPELAGO_Options.optlst");
+        }
+
+        if (File.Exists("ARCHIPELAGO_Tools.itmlst"))
+        {
+            File.Delete("ARCHIPELAGO_Tools.itmlst");
+        }
+
+
+        if (File.Exists("victory"))
+        {
+            File.Delete("victory");
+            Logger.LogInfo("Destroying victory");
+        }
+
+        Logger.LogInfo("ARCHIPELAGO_Powerups.itmlst");
+        File.WriteAllText("ARCHIPELAGO_Powerups.itmlst", "Broccoli,0\r\nDumbbell,0\r\nJetpack,0\r\nOrange Juice,0\r\nPeanut Butter,0\r\nBlue Pill,0\r\nRed Pill,0\r\nSneaker,0\r\nRobin Hood Hat,0\r\nSpooo Bean,0\r\nBulldozer,0\r\nHorseshoe,0\r\nDanis Milk,0\r\nPiggybank,0\r\nCrimson Dagger,0\r\nDracula,0\r\nJanniks Frog,0\r\nJuice,0\r\nAdrenaline,0\r\nBerserk,0\r\nCheckered Shirt,0\r\nSniper Scope,0\r\nKnuts Hammer,0\r\nWings of Glory,0\r\nEnforcer,0");
+
+        Logger.LogInfo("Creatinng ARCHIPELAGO_Locations.lctlst");
+        File.WriteAllText("ARCHIPELAGO_Locations.lctlst", "PowerupWhite,0\r\nPowerupBlue,0\r\nPowerupOrange,0\r\nAdamantite Pickaxe,0\r\nGold Pickaxe,0\r\nMithril Pickaxe,0\r\nSteel Pickaxe,0\r\nWood Pickaxe,0\r\nOak Bow,0\r\nWood Bow,0\r\nBirch bow,0\r\nFir bow,0\r\nAncient Bow,0\r\nAdamantite Axe,0\r\nGold Axe,0\r\nMithril Axe,0\r\nSteel Axe,0\r\nWood Axe,0\r\nAdamantite Boots,0\r\n_ Boots,0\r\nGold Boots,0\r\nMithril Boots,0\r\nObamium Boots,0\r\nSteel Boots,0\r\nWolfskin Boots,0\r\nAdamantite Helmet,0\r\nChunkium Helmet,0\r\nGold Helmet,0\r\nMithril Helmet,0\r\nObamium Helmet,0\r\nSteel Helmet,0\r\nWolfskin Helmet,0\r\nAdamantite Pants,0\r\nChunkium Pants,0\r\nGold Pants,0\r\nMithril Pants,0\r\nObamium Pants,0\r\nSteel Pants,0\r\nWolfskin Pants,0\r\nAdamantite Chestplate,0\r\nChunkium Chestplate,0\r\nGold Chestplate,0\r\nMithril Chestplate,0\r\nObamium Chestplate,0\r\nSteel Chestplate,0\r\nWolfskin Chestplate,0\r\nAdamantite Sword,0\r\nGold Sword,0\r\nMithril Sword,0\r\nObamium Sword,0\r\nSteel Sword,0\r\nChiefs Spear,0\r\nChunky Hammer,0\r\nGronks Sword,0\r\nNight Blade,0\r\nWyvern Dagger,0");
+
+        Logger.LogInfo("ARCHIPELAGO_Options.optlst");
+        File.WriteAllText("ARCHIPELAGO_Options.optlst", "allowLootAsLocations,0");
+
+        Logger.LogInfo("ARCHIPELAGO_Tools.itmlst");
+        File.WriteAllText("ARCHIPELAGO_Tools.itmlst", "weapons,0\r\nbows,0\r\naxes,0\r\npickaxes,0\r\nhelmets,0\r\nchestplates,0\r\nleggings,0\r\nboots,0");
 
         Instance = this;
 
 
         resetGivenPowerups();
+        resetGivenTools();
 
     }
 
@@ -67,33 +98,30 @@ public class Plugin : BaseUnityPlugin
 
 
 
-        if (previousState == GameManager.GameState.Loading && GameManager.state == GameManager.GameState.Playing)
-        {
-            atGameStart();
-        }
-
-
-
         if (GameManager.state == GameManager.GameState.Playing)
         {
             try
             {
                 updateGivenPowerups(getPowerupsDict());
+                updateGivenTools(getToolsDict());
             }
             catch { }
             ;
 
         }
 
-
-        //Logger.LogInfo($"Game state : {GameManager.state}");
-        previousState = GameManager.state;
     }
 
     public void atGameStart()
     {
         resetGivenPowerups();
         updateGivenPowerups(getPowerupsDict());
+
+        resetGivenTools();
+        updateGivenTools(getToolsDict());
+
+        fullyHeal();
+        
     }
 
 
@@ -103,7 +131,7 @@ public class Plugin : BaseUnityPlugin
     {
         FieldInfo field = PowerupInventory.Instance.GetType().GetField("powerups", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
         int[] powerups = (int[])field.GetValue(PowerupInventory.Instance);
-        powerups[powerupId]+= count;
+        powerups[powerupId] += count;
         field.SetValue(PowerupInventory.Instance, powerups);
 
         UiEvents.Instance.AddPowerup(ItemManager.Instance.allPowerups[powerupId]);
@@ -113,6 +141,42 @@ public class Plugin : BaseUnityPlugin
         }
 
     }
+
+
+    public void giveRightTool(string name, int count)
+    {
+        string[] list;
+        if (name == "weapons") {
+            list = Constants.weapons;
+        }
+        else if (name == "bows") {
+            list = Constants.bows;
+        }
+        else if (name == "axes") {
+            list = Constants.axes;
+        }
+        else if (name == "pickaxes") {
+            list = Constants.pickaxes;
+        }
+
+        else if (name == "helmets") {
+            list = Constants.helmets;
+        }
+        else if (name == "chestplates") {
+            list = Constants.chestplates;
+        }
+        else if (name == "leggings") {
+            list = Constants.leggings;
+        }
+        else if (name == "boots") {
+            list = Constants.boots;
+        }
+        else { return; }
+
+
+        giveUniqueItem(list[count-1],1);
+    }
+
 
     public bool isGamePlaying() //untested
     {
@@ -136,9 +200,17 @@ public class Plugin : BaseUnityPlugin
 
 
 
-    public Dictionary<string,int> getPowerupsDict()        //note to self, breaks when you reach 2147483647 of a single powerup
+    public Dictionary<string, int> getPowerupsDict()        //note to self, breaks when you reach 2147483647 of a single powerup
     {
         string readText = File.ReadAllText("ARCHIPELAGO_Powerups.itmlst");
+
+        return strToDict(readText);
+    }
+
+
+    public Dictionary<string, int> getToolsDict()        //note to self, breaks when you reach 2147483647 of a single powerup
+    {
+        string readText = File.ReadAllText("ARCHIPELAGO_Tools.itmlst");
 
         return strToDict(readText);
     }
@@ -174,7 +246,25 @@ public class Plugin : BaseUnityPlugin
             { "Knuts Hammer",0},
             { "Wings of Glory",0},
             { "Enforcer",0}
-        }; 
+        };
+
+    }
+
+    public void resetGivenTools()
+    {
+        Logger.LogInfo("Tools Dict Reset");
+        givenTools = new Dictionary<string, int>
+        {
+            { "weapons",0},
+            { "bows",0},
+            { "axes",0},
+            { "pickaxes",0},
+            { "helmets",0},
+            { "chestplates",0},
+            { "leggings",0},
+            { "boots",0}
+        };
+        hasReceivedArrows = false;
 
     }
 
@@ -182,20 +272,54 @@ public class Plugin : BaseUnityPlugin
     public void sendLocation(string locationName)
     {
         Dictionary<string, int> locationDict = strToDict(File.ReadAllText("ARCHIPELAGO_Locations.lctlst"));
-        
+
         locationDict[locationName]++;
         Logger.LogInfo(dictToStr(locationDict));
-        File.WriteAllText("ARCHIPELAGO_Locations.lctlst",dictToStr(locationDict));
+        File.WriteAllText("ARCHIPELAGO_Locations.lctlst", dictToStr(locationDict));
     }
+
+    public void sendUniqueLocation(string locationName)
+    {
+        Dictionary<string, int> locationDict = strToDict(File.ReadAllText("ARCHIPELAGO_Locations.lctlst"));
+
+        Logger.LogInfo(locationName);
+
+        if (locationDict[locationName] == 0)
+        {
+            sendLocation(locationName);
+        }
+
+    }
+
+    public void sendALternateUniqueLocation(string locationName)
+    {
+        if (allowAlternateLocations()) 
+        {
+            sendUniqueLocation(locationName);
+        }
+    }
+
+    public bool hasLocation(string locationName)
+    {
+        Dictionary<string, int> locationDict = strToDict(File.ReadAllText("ARCHIPELAGO_Locations.lctlst"));
+
+        if (locationDict[locationName] > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     public static Dictionary<string, int> strToDict(string str)
     {
-        string[] readList = str.Split(new string[] { Environment.NewLine , "\n"}, StringSplitOptions.None);
+        string[] readList = str.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
 
         Dictionary<string, int> finalDict = new Dictionary<string, int>();
 
         foreach (string line in readList)
         {
+            
             string[] splitString = line.Split(",".ToCharArray());
 
             finalDict.Add(splitString[0], Int32.Parse(splitString[1]));
@@ -213,13 +337,13 @@ public class Plugin : BaseUnityPlugin
             if (firstLine)
             {
                 finalString = finalString + $"{line.Key},{line.Value}";
-                firstLine = false ;
+                firstLine = false;
             }
             else
             {
                 finalString = finalString + $"\n{line.Key},{line.Value}";
             }
-            
+
         }
         return finalString;
     }
@@ -234,80 +358,69 @@ public class Plugin : BaseUnityPlugin
                 Logger.LogInfo($"{powerup.Key} : {nbPowerupsToGive.ToString()}");
                 forceGivePowerup(ItemManager.Instance.stringToPowerupId[powerup.Key], nbPowerupsToGive);
                 givenPowerups[powerup.Key] += nbPowerupsToGive;
+                PlayerStatus.Instance.UpdateStats();
             }
         }
     }
 
+    public void updateGivenTools(Dictionary<string, int> toolsToHave)
+    {
+        foreach (KeyValuePair<string, int> tool in toolsToHave)
+        {
+            if (tool.Value > givenTools[tool.Key])
+            {
+                giveRightTool(tool.Key, tool.Value);
+                givenTools[tool.Key] += tool.Value - givenTools[tool.Key];
+            }
+        }
+        if (givenTools["bows"] > 0 && !hasReceivedArrows)
+        {
+            giveUniqueItem("Flint Arrow", 500 * givenTools["bows"]);
+            hasReceivedArrows = true;
+        }
+    }
 
+
+
+    public bool allowAlternateLocations()
+    {
+        return strToDict(File.ReadAllText("ARCHIPELAGO_Options.optlst"))["allowLootAsLocations"] == 1;
+    }
 
     public void win()
     {
-    File.WriteAllText("victory", "Bob defeated");
+        File.WriteAllText("victory", "Bob defeated");
     }
 
 
-}
 
 
-
-
-[HarmonyPatch(typeof(PowerupInventory))]
-[HarmonyPatch(nameof(PowerupInventory.AddPowerup))]
-class PatcherAddPowerup
-{
-
-
-    static bool Prefix(string name, int powerupId, int objectId)
+    public void fullyHeal()
     {
-
-        Vector3 position = ItemManager.Instance.list[objectId].transform.position;
-        ParticleSystem component = UnityEngine.Object.Instantiate(PowerupInventory.Instance.powerupFx, position, Quaternion.identity).GetComponent<ParticleSystem>();
-        ParticleSystem.MainModule main = component.main;
-        main.startColor = ItemManager.Instance.allPowerups[powerupId].GetOutlineColor();
-
-
-        if (ItemManager.Instance.allPowerups[powerupId].tier == Powerup.PowerTier.Orange)
-        {
-            component.gameObject.GetComponent<RandomSfx>().sounds = new AudioClip[1] { PowerupInventory.Instance.goodPowerupSfx };
-            component.GetComponent<RandomSfx>().Randomize(0f);
-        }
-
-
-        if (ItemManager.Instance.allPowerups[powerupId].tier == Powerup.PowerTier.White)
-        {
-            Plugin.Instance.sendLocation("PowerupWhite");
-        }
-        else if (ItemManager.Instance.allPowerups[powerupId].tier == Powerup.PowerTier.Blue)
-        {
-            Plugin.Instance.sendLocation("PowerupBlue");
-        }
-        else if (ItemManager.Instance.allPowerups[powerupId].tier == Powerup.PowerTier.Orange)
-        {
-          
-            Plugin.Instance.sendLocation("PowerupOrange");
-        }
-         return false;
+        PlayerStatus.Instance.hp = PlayerStatus.Instance.maxHp;
     }
-}
 
 
 
-
-[HarmonyPatch(typeof(ServerSend))]
-[HarmonyPatch(nameof(ServerSend.GameOver))]
-class PatcherGameOver
-{
-
-
-    static bool Prefix(int winnerId = -2)
+    public void giveUniqueItem(string itemName, int count)
     {
-         if (winnerId == -3)
+        InventoryItem item = ScriptableObject.CreateInstance<InventoryItem>();
+        foreach (InventoryItem baseItem in ItemManager.Instance.allScriptableItems)
         {
-            Plugin.Instance.win();
+            if (baseItem.name == itemName)
+            {
+                item.Copy(baseItem, count);
+                item.description = Constants.GivenItemDescription;
+            }
         }
 
-
-
-        return true;
+        foreach (InventoryCell cell in InventoryUI.Instance.cells)
+        {
+            InventoryUI.Instance.AddItemToInventory(item);
+            return;
+        }
     }
 }
+
+
+
