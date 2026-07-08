@@ -5,8 +5,9 @@
 
 ## How to setup the client
 1) Get the lastest apworld on the [release page](https://github.com/PGMProductions/Muck-for-Archipelago/releases)
-2) In your archipelago folder, put the apworld in custom_worlds
-3) You should now have a client for muck that you can use to connect to games and that will communicate with the mod
+2) In your archipelago folder, put the apworld in custom_worlds (you can also use the install apworld tool from the launcher)
+3) restart the launcher
+4) You should now have a client for muck that you can use to connect to games and that will communicate with the mod
 
 ## When playing
 Multiplayer is not supported yet, you should be the only player in the lobby
