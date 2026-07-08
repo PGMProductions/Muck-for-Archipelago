@@ -86,9 +86,11 @@ class Difficulty(Choice):
     Only used in logic to determine how many powerups/weapons/armors you need to defeat bosses
     Will cause generation errors when using a low difficulty and a small item pool
     
-    Easy will wait until you have a LOT of powerups and weapons before assuming you can fight bosses
+    Easy will wait until you have a LOT of powerups and weapons before saying you can fight bosses
     None will assume you can beat everything with nothing but a rock
     Normal and Hard are in-betweens
+    
+    It is NOT recommended to play with None
     """
     display_name = "Logic Difficulty"
 
@@ -98,7 +100,30 @@ class Difficulty(Choice):
     option_none = 0
     
     default = option_normal
-    
+
+
+class IncludeExoticArmors(Toggle):
+    """
+    Wether to add crafting Wolfskin armor and Chunkium armor as locations
+    """
+    display_name = "Include Exotic Armors"
+
+
+class IncludeLegendaryWeapons(Toggle):
+    """
+    Wether to add crafting legendary weapons as locations
+    These are the Wyvern Dagger, Gronk's Sword, Chunky Hammer, Night Blade, Chiefs Spear and Ancient Bow
+    """
+    display_name = "Include Legendary Weapons"
+
+
+
+class AllowLootAsLocations(Toggle):
+    """
+    Allows you to get the locations for crafting tools/weapons/armors by obtaining them through other means
+    (Looting chests, buying from woodmen...)
+    """
+    display_name = "Allow Looting Locations" 
     
     
 @dataclass
@@ -112,25 +137,37 @@ class MuckOptions(PerGameCommonOptions):
     bluePerRegion: NumberBluePowerupsPerRegion
     orangePerRegion: NumberOrangePowerupsPerRegion
     
+    includeExoticArmors:IncludeExoticArmors
+    includeLegendaryWeapons:IncludeLegendaryWeapons
+    allowLootAsLocations: AllowLootAsLocations
+    
     logicDifficulty: Difficulty
+    
 
 
 option_groups = [
     OptionGroup(
+        "Game Options",
+        [Difficulty],
+    ),
+    OptionGroup(
         "Powerup Items Options",
-        [WhiteItemWeight,BlueItemWeight,OrangeItemWeight]
+        [WhiteItemWeight,BlueItemWeight,OrangeItemWeight],
+    ),
+    OptionGroup(
+        "Locations Options",
+        [IncludeExoticArmors,IncludeLegendaryWeapons],
     ),
     OptionGroup(
         "Powerup Locations Options",
-        [NumberOfPowerupsRegions,NumberWhitePowerupsPerRegion,NumberBluePowerupsPerRegion,NumberOrangePowerupsPerRegion]
-    )
-
+        [NumberOfPowerupsRegions,NumberWhitePowerupsPerRegion,NumberBluePowerupsPerRegion,NumberOrangePowerupsPerRegion],
+    ),
+    OptionGroup(
+        "Gameplay Options",
+        [AllowLootAsLocations],
+    ),
 ]
-    
-    
-    
-    
-    
+
     
     
     

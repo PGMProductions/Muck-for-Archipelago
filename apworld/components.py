@@ -2,7 +2,7 @@ from worlds.LauncherComponents import Component, Type, components, launch, icon_
 
 
 def run_client(*args: str) -> None:
-    from .client.launch import LaunchClient
+    from .launch import LaunchClient
 
     launch(LaunchClient, name="APQuest Client", args=args)
 

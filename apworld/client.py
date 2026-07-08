@@ -1,6 +1,7 @@
 from CommonClient import CommonContext as SuperContext, gui_enabled, ClientCommandProcessor, logger, get_base_parser, CommonContext, server_loop
 import asyncio
 import typing
+import os
 
 from tkinter import filedialog
 
@@ -15,6 +16,8 @@ class MuckContext(CommonContext):
     game = "Muck"
     command_processor = ClientCommandProcessor
     items_handling = 0b111
+    
+    allowLootAsLocations = None
     
     
     
@@ -60,8 +63,13 @@ class MuckContext(CommonContext):
     async def shutdown(self):
         resetFilesStates()
         await super().shutdown()
-
-
+    
+    
+    
+    
+    def on_package(self, cmd: str, args: dict[str, any]) -> None:
+        if cmd == "Connected":
+            self.allowLootAsLocations = args["slot_data"]["allowLootAsLocations"]
 
 
 async def locations_checker(ctx: MuckContext):
@@ -86,14 +94,79 @@ async def locations_checker(ctx: MuckContext):
                     elif splitLine[0] == "PowerupOrange":
                         for i in range(1,int(splitLine[1])+1):
                             locations.append(orangePowerupsOffset + i)
-            
+                    
+                    
+                    elif splitLine[0] == "_ Boots":
+                        locations.append(LOCATION_NAME_TO_ID["Chunkium Boots"])
+                    
+                    else:
+                        locations.append(LOCATION_NAME_TO_ID[splitLine[0]])
+                        
+                        
+                        
             await ctx.check_locations(locations)
             
         except:
             pass
             
         
-        locationDict = {"PowerupWhite" : 0, "PowerupBlue" : 0, "PowerupOrange" : 0}
+        locationDict = {"PowerupWhite" : 0,
+                        "PowerupBlue" : 0,
+                        "PowerupOrange" : 0,
+                        
+                        "Adamantite Pickaxe" : 0,
+                        "Gold Pickaxe" : 0,
+                        "Mithril Pickaxe" : 0,
+                        "Steel Pickaxe" : 0,
+                        "Wood Pickaxe" : 0,
+                        "Oak Bow" : 0,
+                        "Wood Bow" : 0,
+                        "Birch bow" : 0,
+                        "Fir bow" : 0,
+                        "Ancient Bow" : 0,
+                        "Adamantite Axe" : 0,
+                        "Gold Axe" : 0,
+                        "Mithril Axe" : 0,
+                        "Steel Axe" : 0,
+                        "Wood Axe" : 0,
+                        "Adamantite Boots" : 0,
+                        "Chunkium Boots" : 0,
+                        "Gold Boots" : 0,
+                        "Mithril Boots" : 0,
+                        "Obamium Boots" : 0,
+                        "Steel Boots" : 0,
+                        "Wolfskin Boots" : 0,
+                        "Adamantite Helmet" : 0,
+                        "Chunkium Helmet" : 0,
+                        "Gold Helmet" : 0,
+                        "Mithril Helmet" : 0,
+                        "Obamium Helmet" : 0,
+                        "Steel Helmet" : 0,
+                        "Wolfskin Helmet" : 0,
+                        "Adamantite Pants" : 0,
+                        "Chunkium Pants" : 0,
+                        "Gold Pants" : 0,
+                        "Mithril Pants" : 0,
+                        "Obamium Pants" : 0,
+                        "Steel Pants" : 0,
+                        "Wolfskin Pants" : 0,
+                        "Adamantite Chestplate" : 0,
+                        "Chunkium Chestplate" : 0,
+                        "Gold Chestplate" : 0,
+                        "Mithril Chestplate" : 0,
+                        "Obamium Chestplate" : 0,
+                        "Steel Chestplate" : 0,
+                        "Wolfskin Chestplate" : 0,
+                        "Adamantite Sword" : 0,
+                        "Gold Sword" : 0,
+                        "Mithril Sword" : 0,
+                        "Obamium Sword" : 0,
+                        "Steel Sword" : 0,
+                        "Chiefs Spear" : 0,
+                        "Chunky Hammer" : 0,
+                        "Gronks Sword" : 0,
+                        "Night Blade" : 0,
+                        "Wyvern Dagger" : 0,}
         
         
         #system for powerups
@@ -112,16 +185,13 @@ async def locations_checker(ctx: MuckContext):
             i += 1
         locationDict["PowerupOrange"] = i-1
         
-        
-        
-        #system for non-powerups (not used yet)
-        """
+
         for location in ctx.checked_locations:
             name = ID_TO_LOCATION_NAME[location]
+            if name == "Chunkium Boots":
+                name = "_ Boots"
             if not name.split(" ")[1] == "Powerup":
                 locationDict[name] += 1
-                
-        """
         
         setLocationsFile(locationDict)
                 
@@ -147,8 +217,69 @@ async def items_checker(ctx: MuckContext):
             pass
         
         
-        await  asyncio.sleep(1)
+        receivedWeapons = min(receivedItems.count("Progressive Weapon"),10)
+        receivedBows = min(receivedItems.count("Progressive Bow"),5)
+        receivedAxes = min(receivedItems.count("Progressive Axe"),4)
+        receivedPickaxes = min(receivedItems.count("Progressive Pickaxe"),4)
         
+        receivedHelmets = min(receivedItems.count("Progressive Helmet"),5)
+        receivedChestplates = min(receivedItems.count("Progressive Chestplate"),5)
+        receivedLeggings = min(receivedItems.count("Progressive Leggings"),5)
+        receivedboots = min(receivedItems.count("Progressive Boots"),5)
+        
+        
+        try:
+            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Tools.itmlst","w")) as f:
+                f.write(f"""weapons,{receivedWeapons}
+bows,{receivedBows}
+axes,{receivedAxes}
+pickaxes,{receivedPickaxes}
+helmets,{receivedHelmets}
+chestplates,{receivedChestplates}
+leggings,{receivedLeggings}
+boots,{receivedboots}""")
+        except:
+            pass
+        
+        
+        await  asyncio.sleep(1)
+
+
+
+
+async def other_loop(ctx: MuckContext):
+    while not ctx.exit_event.is_set():
+
+        try:
+            with(open(MUCK_FOLDER_PATH + "\\victory","r")) as f:
+                ctx.finished_game = True
+            
+            os.remove(MUCK_FOLDER_PATH + "\\victory")
+            
+            
+        except:
+            pass
+        
+        
+        try:
+            
+            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Options.optlst","w")) as f:
+                
+                if ctx.allowLootAsLocations == 1:
+                    f.write("allowLootAsLocations,1")
+                else:
+                    f.write("allowLootAsLocations,0")
+
+        except:
+            pass
+    
+        await  asyncio.sleep(3)
+        
+
+
+
+
+
 
 def resetPowerupDict():
     with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Powerups.itmlst","w")) as f:
@@ -204,7 +335,7 @@ async def startMuckClient(launch_args):
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
     asyncio.create_task(locations_checker(ctx), name="MuckLocationsChecker")
     asyncio.create_task(items_checker(ctx),name="MuckItemsChecker")
-    
+    asyncio.create_task(other_loop(ctx),name="MuckAdditionalChecker")
     
     if gui_enabled:
         ctx.run_gui()

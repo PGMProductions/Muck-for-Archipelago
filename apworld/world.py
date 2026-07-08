@@ -23,6 +23,8 @@ class MuckWorld(World):
 
     options_dataclass = muck_options.MuckOptions
     options: muck_options.MuckOptions
+    
+    base_id = 68000
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)
@@ -39,3 +41,6 @@ class MuckWorld(World):
 
     def get_filler_item_name(self) -> str:
         return items.get_random_filler_item_name(self)
+    
+    def fill_slot_data(self):
+        return self.options.as_dict("allowLootAsLocations")

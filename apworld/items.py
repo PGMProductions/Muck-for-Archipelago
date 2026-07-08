@@ -50,7 +50,17 @@ def create_item_with_correct_classification(world: APQuestWorld, name: str) -> A
 def create_all_items(world: MuckWorld) -> None:
     itempool: list[Item] = []
     
-    #add here when there'll be non-filler items
+    itempool += [world.create_item("Progressive Weapon") for _ in range(10)]
+    itempool += [world.create_item("Progressive Bow") for _ in range(5)]
+    itempool += [world.create_item("Progressive Axe") for _ in range(4)]
+    itempool += [world.create_item("Progressive Pickaxe") for _ in range(4)]
+    
+    itempool += [world.create_item("Progressive Helmet") for _ in range(5)]
+    itempool += [world.create_item("Progressive Chestplate") for _ in range(5)]
+    itempool += [world.create_item("Progressive Leggings") for _ in range(5)]
+    itempool += [world.create_item("Progressive Boots") for _ in range(5)]
+    
+    
     
     number_of_items = len(itempool)
     
