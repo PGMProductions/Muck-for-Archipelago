@@ -4,7 +4,7 @@
 5) Press Start Modded, the game should launch with the mod loaded
 
 ## How to setup the client
-1) Get the lastest apworld on the [release page]([https://github.com/PGMProductions/Muck-for-Archipelago/releases/tag/Major-Update](https://github.com/PGMProductions/Muck-for-Archipelago/releases))
+1) Get the lastest apworld on the [release page](https://github.com/PGMProductions/Muck-for-Archipelago/releases)
 2) In your archipelago folder, put the apworld in custom_worlds
 3) You should now have a client for muck that you can use to connect to games and that will communicate with the mod
 
