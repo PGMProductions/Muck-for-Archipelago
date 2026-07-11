@@ -18,6 +18,7 @@ class MuckContext(CommonContext):
     items_handling = 0b111
     
     allowLootAsLocations = None
+    deathlink = False
     
     
     
@@ -70,6 +71,26 @@ class MuckContext(CommonContext):
     def on_package(self, cmd: str, args: dict[str, any]) -> None:
         if cmd == "Connected":
             self.allowLootAsLocations = args["slot_data"]["allowLootAsLocations"]
+            self.deathlink = args["slot_data"]["deathlink"] == 1
+
+            
+            
+            
+
+
+
+    def on_deathlink(self, data: typing.Dict[str, typing.Any]):
+        try:
+            with(open(MUCK_FOLDER_PATH + "\\receive.deathlink", "w") as f):
+                f.close()
+        except:
+            self.command_processor.output("Deathlink failed, sorry")
+            
+        super().on_deathlink(data)
+
+
+
+
 
 
 async def locations_checker(ctx: MuckContext):
@@ -250,6 +271,17 @@ boots,{receivedboots}""")
 async def other_loop(ctx: MuckContext):
     while not ctx.exit_event.is_set():
 
+        await ctx.update_death_link(ctx.deathlink)
+        
+        if ctx.deathlink:
+            try:
+                with(open(MUCK_FOLDER_PATH + "\\send.deathlink","r")) as f:
+                    await ctx.send_death(f"{ctx.player_names[ctx.slot]} got MUCKED too hard")
+                
+                os.remove(MUCK_FOLDER_PATH + "\\send.deathlink")
+            except:
+                pass
+        
         try:
             with(open(MUCK_FOLDER_PATH + "\\victory","r")) as f:
                 ctx.finished_game = True
@@ -273,7 +305,7 @@ async def other_loop(ctx: MuckContext):
         except:
             pass
     
-        await  asyncio.sleep(3)
+        await asyncio.sleep(3)
         
 
 

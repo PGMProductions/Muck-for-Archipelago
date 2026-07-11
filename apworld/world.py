@@ -43,4 +43,4 @@ class MuckWorld(World):
         return items.get_random_filler_item_name(self)
     
     def fill_slot_data(self):
-        return self.options.as_dict("allowLootAsLocations")
+        return self.options.as_dict("allowLootAsLocations","deathlink")

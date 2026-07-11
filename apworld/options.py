@@ -125,7 +125,13 @@ class AllowLootAsLocations(Toggle):
     """
     display_name = "Allow Looting Locations" 
     
-    
+
+class Deathlink(Toggle):
+    """
+    Include deathlink
+    """
+
+
 @dataclass
 class MuckOptions(PerGameCommonOptions):
     whitePowerupItemWeight: WhiteItemWeight
@@ -142,6 +148,7 @@ class MuckOptions(PerGameCommonOptions):
     allowLootAsLocations: AllowLootAsLocations
     
     logicDifficulty: Difficulty
+    deathlink: Deathlink
     
 
 
