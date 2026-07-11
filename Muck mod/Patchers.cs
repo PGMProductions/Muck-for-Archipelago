@@ -76,8 +76,17 @@ class PatcherGameOver
         {
             Plugin.Instance.win();
         }
-
-
+         if (winnerId == -2)
+        {
+            if (Plugin.Instance.deathlinked)
+            {
+                Plugin.Instance.deathlinked = false;
+            }
+            else
+            {
+                File.WriteAllText("send.deathlink", "u ded lol");
+            }
+        }
 
         return true;
     }
@@ -184,3 +193,4 @@ class PatcherStartGame
         Plugin.Instance.atGameStart();
     }
 }
+

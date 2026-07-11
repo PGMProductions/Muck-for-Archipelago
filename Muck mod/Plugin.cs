@@ -33,6 +33,8 @@ public class Plugin : BaseUnityPlugin
 
     public bool hasReceivedArrows;
 
+    public bool deathlinked;
+
     private async void Awake()
     {
         // Plugin startup logic
@@ -86,6 +88,7 @@ public class Plugin : BaseUnityPlugin
 
         Instance = this;
 
+        deathlinked = false;
 
         resetGivenPowerups();
         resetGivenTools();
@@ -98,8 +101,25 @@ public class Plugin : BaseUnityPlugin
 
 
 
+        if (File.Exists("receive.deathlink"))
+        {
+            if (GameManager.state == GameManager.GameState.Playing)
+            {
+                deathlinked = true;
+                PlayerStatus.Instance.Damage(0,ignoreProtection: true);
+                
+            }
+
+            File.Delete("receive.deathlink");
+        }
+
+
         if (GameManager.state == GameManager.GameState.Playing)
         {
+
+
+
+
             try
             {
                 updateGivenPowerups(getPowerupsDict());
@@ -143,7 +163,7 @@ public class Plugin : BaseUnityPlugin
     }
 
 
-    public void giveRightTool(string name, int count)
+    public bool giveRightTool(string name, int count)
     {
         string[] list;
         if (name == "weapons") {
@@ -171,11 +191,30 @@ public class Plugin : BaseUnityPlugin
         else if (name == "boots") {
             list = Constants.boots;
         }
-        else { return; }
+        else { return false; }
 
 
-        giveUniqueItem(list[count-1],1);
+        deleteAllItemsFromList(list);
+        return giveUniqueItem(list[count-1],1);
     }
+
+    public void deleteAllItemsFromList(string[] list)
+    {
+        int itemId = 0;
+        foreach (string itemName in list)
+        {
+            foreach (InventoryItem baseItem in ItemManager.Instance.allScriptableItems)
+            {
+                if (baseItem.name == itemName)
+                {
+                    itemId = baseItem.id;
+                    break;
+                }
+            }
+            InventoryUI.Instance.RemoveItem(ItemManager.Instance.allScriptableItems[itemId]);
+        }
+
+    } 
 
 
     public bool isGamePlaying() //untested
@@ -369,8 +408,8 @@ public class Plugin : BaseUnityPlugin
         {
             if (tool.Value > givenTools[tool.Key])
             {
-                giveRightTool(tool.Key, tool.Value);
-                givenTools[tool.Key] += tool.Value - givenTools[tool.Key];
+                if(giveRightTool(tool.Key, tool.Value))
+                { givenTools[tool.Key] += tool.Value - givenTools[tool.Key]; }
             }
         }
         if (givenTools["bows"] > 0 && !hasReceivedArrows)
@@ -402,7 +441,7 @@ public class Plugin : BaseUnityPlugin
 
 
 
-    public void giveUniqueItem(string itemName, int count)
+    public bool giveUniqueItem(string itemName, int count)
     {
         InventoryItem item = ScriptableObject.CreateInstance<InventoryItem>();
         foreach (InventoryItem baseItem in ItemManager.Instance.allScriptableItems)
@@ -411,14 +450,18 @@ public class Plugin : BaseUnityPlugin
             {
                 item.Copy(baseItem, count);
                 item.description = Constants.GivenItemDescription;
+                break;
             }
         }
 
-        foreach (InventoryCell cell in InventoryUI.Instance.cells)
+
+        if (InventoryUI.Instance.AddItemToInventory(item) == 1)
         {
-            InventoryUI.Instance.AddItemToInventory(item);
-            return;
+            return false;
         }
+
+        return true;
+
     }
 }
 
