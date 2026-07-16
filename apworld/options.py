@@ -20,6 +20,11 @@ class NumberWhitePowerupsPerRegion(Range):
     """
     How many white powerup pickup location to put in each region
     Note that the total ammount of white powerups you will need to pickup to get the whole location pool is Number Of Regions * Number Of Location Per Region
+    
+    I higly recommend you don't make your location pool too big or too small
+    Having too little can cause generation errors or leave you bked with all powerup locations quickly found
+    Having too many will add tons of filler powerups and you will easily become overpowered but you won't find your required items to finish the game
+    
     White powerup locations picked up after that won't give you anything
     """
     display_name = "Number Of White Powerup Location Per Region"
