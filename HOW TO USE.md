@@ -12,6 +12,8 @@
 ## When playing
 Multiplayer is not supported yet, you should be the only player in the lobby
 
+You can play in any difficulty
+
 When enncountering any bug, don't hesitate to notify me on the discord thread so I can fix it, restarting the game generally works too
 
 If you have suggestions or issues, you can go to the discord thread, I read all of the messages there
