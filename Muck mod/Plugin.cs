@@ -47,44 +47,6 @@ public class Plugin : BaseUnityPlugin
 
 
 
-        if (File.Exists("ARCHIPELAGO_Powerups.itmlst"))
-        {
-            File.Delete("ARCHIPELAGO_Powerups.itmlst");
-        }
-
-        if (File.Exists("ARCHIPELAGO_Locations.lctlst"))
-        {
-            File.Delete("ARCHIPELAGO_Locations.lctlst");
-        }
-
-        if (File.Exists("ARCHIPELAGO_Options.optlst"))
-        {
-            File.Delete("ARCHIPELAGO_Options.optlst");
-        }
-
-        if (File.Exists("ARCHIPELAGO_Tools.itmlst"))
-        {
-            File.Delete("ARCHIPELAGO_Tools.itmlst");
-        }
-
-
-        if (File.Exists("victory"))
-        {
-            File.Delete("victory");
-            Logger.LogInfo("Destroying victory");
-        }
-
-        Logger.LogInfo("ARCHIPELAGO_Powerups.itmlst");
-        File.WriteAllText("ARCHIPELAGO_Powerups.itmlst", "Broccoli,0\r\nDumbbell,0\r\nJetpack,0\r\nOrange Juice,0\r\nPeanut Butter,0\r\nBlue Pill,0\r\nRed Pill,0\r\nSneaker,0\r\nRobin Hood Hat,0\r\nSpooo Bean,0\r\nBulldozer,0\r\nHorseshoe,0\r\nDanis Milk,0\r\nPiggybank,0\r\nCrimson Dagger,0\r\nDracula,0\r\nJanniks Frog,0\r\nJuice,0\r\nAdrenaline,0\r\nBerserk,0\r\nCheckered Shirt,0\r\nSniper Scope,0\r\nKnuts Hammer,0\r\nWings of Glory,0\r\nEnforcer,0");
-
-        Logger.LogInfo("Creatinng ARCHIPELAGO_Locations.lctlst");
-        File.WriteAllText("ARCHIPELAGO_Locations.lctlst", "PowerupWhite,0\r\nPowerupBlue,0\r\nPowerupOrange,0\r\nAdamantite Pickaxe,0\r\nGold Pickaxe,0\r\nMithril Pickaxe,0\r\nSteel Pickaxe,0\r\nWood Pickaxe,0\r\nOak Bow,0\r\nWood Bow,0\r\nBirch bow,0\r\nFir bow,0\r\nAncient Bow,0\r\nAdamantite Axe,0\r\nGold Axe,0\r\nMithril Axe,0\r\nSteel Axe,0\r\nWood Axe,0\r\nAdamantite Boots,0\r\n_ Boots,0\r\nGold Boots,0\r\nMithril Boots,0\r\nObamium Boots,0\r\nSteel Boots,0\r\nWolfskin Boots,0\r\nAdamantite Helmet,0\r\nChunkium Helmet,0\r\nGold Helmet,0\r\nMithril Helmet,0\r\nObamium Helmet,0\r\nSteel Helmet,0\r\nWolfskin Helmet,0\r\nAdamantite Pants,0\r\nChunkium Pants,0\r\nGold Pants,0\r\nMithril Pants,0\r\nObamium Pants,0\r\nSteel Pants,0\r\nWolfskin Pants,0\r\nAdamantite Chestplate,0\r\nChunkium Chestplate,0\r\nGold Chestplate,0\r\nMithril Chestplate,0\r\nObamium Chestplate,0\r\nSteel Chestplate,0\r\nWolfskin Chestplate,0\r\nAdamantite Sword,0\r\nGold Sword,0\r\nMithril Sword,0\r\nObamium Sword,0\r\nSteel Sword,0\r\nChiefs Spear,0\r\nChunky Hammer,0\r\nGronks Sword,0\r\nNight Blade,0\r\nWyvern Dagger,0");
-
-        Logger.LogInfo("ARCHIPELAGO_Options.optlst");
-        File.WriteAllText("ARCHIPELAGO_Options.optlst", "allowLootAsLocations,0");
-
-        Logger.LogInfo("ARCHIPELAGO_Tools.itmlst");
-        File.WriteAllText("ARCHIPELAGO_Tools.itmlst", "weapons,0\r\nbows,0\r\naxes,0\r\npickaxes,0\r\nhelmets,0\r\nchestplates,0\r\nleggings,0\r\nboots,0");
 
         Instance = this;
 
@@ -132,13 +94,61 @@ public class Plugin : BaseUnityPlugin
 
     }
 
-    public void atGameStart()
+    public async void atGameStart()
     {
+        if (File.Exists("ARCHIPELAGO_Powerups.itmlst"))
+        {
+            File.Delete("ARCHIPELAGO_Powerups.itmlst");
+        }
+
+        if (File.Exists("ARCHIPELAGO_Locations.lctlst"))
+        {
+            File.Delete("ARCHIPELAGO_Locations.lctlst");
+        }
+
+        if (File.Exists("ARCHIPELAGO_Options.optlst"))
+        {
+            File.Delete("ARCHIPELAGO_Options.optlst");
+        }
+
+        if (File.Exists("ARCHIPELAGO_Tools.itmlst"))
+        {
+            File.Delete("ARCHIPELAGO_Tools.itmlst");
+        }
+
+
+        if (File.Exists("victory"))
+        {
+            File.Delete("victory");
+            Logger.LogInfo("Destroying victory");
+        }
+
+        Logger.LogInfo("ARCHIPELAGO_Powerups.itmlst");
+        File.WriteAllText("ARCHIPELAGO_Powerups.itmlst", "Broccoli,0\r\nDumbbell,0\r\nJetpack,0\r\nOrange Juice,0\r\nPeanut Butter,0\r\nBlue Pill,0\r\nRed Pill,0\r\nSneaker,0\r\nRobin Hood Hat,0\r\nSpooo Bean,0\r\nBulldozer,0\r\nHorseshoe,0\r\nDanis Milk,0\r\nPiggybank,0\r\nCrimson Dagger,0\r\nDracula,0\r\nJanniks Frog,0\r\nJuice,0\r\nAdrenaline,0\r\nBerserk,0\r\nCheckered Shirt,0\r\nSniper Scope,0\r\nKnuts Hammer,0\r\nWings of Glory,0\r\nEnforcer,0");
+
+        Logger.LogInfo("Creatinng ARCHIPELAGO_Locations.lctlst");
+        File.WriteAllText("ARCHIPELAGO_Locations.lctlst", "PowerupWhite,0\r\nPowerupBlue,0\r\nPowerupOrange,0\r\nAdamantite Pickaxe,0\r\nGold Pickaxe,0\r\nMithril Pickaxe,0\r\nSteel Pickaxe,0\r\nWood Pickaxe,0\r\nOak Bow,0\r\nWood Bow,0\r\nBirch bow,0\r\nFir bow,0\r\nAncient Bow,0\r\nAdamantite Axe,0\r\nGold Axe,0\r\nMithril Axe,0\r\nSteel Axe,0\r\nWood Axe,0\r\nAdamantite Boots,0\r\n_ Boots,0\r\nGold Boots,0\r\nMithril Boots,0\r\nObamium Boots,0\r\nSteel Boots,0\r\nWolfskin Boots,0\r\nAdamantite Helmet,0\r\nChunkium Helmet,0\r\nGold Helmet,0\r\nMithril Helmet,0\r\nObamium Helmet,0\r\nSteel Helmet,0\r\nWolfskin Helmet,0\r\nAdamantite Pants,0\r\nChunkium Pants,0\r\nGold Pants,0\r\nMithril Pants,0\r\nObamium Pants,0\r\nSteel Pants,0\r\nWolfskin Pants,0\r\nAdamantite Chestplate,0\r\nChunkium Chestplate,0\r\nGold Chestplate,0\r\nMithril Chestplate,0\r\nObamium Chestplate,0\r\nSteel Chestplate,0\r\nWolfskin Chestplate,0\r\nAdamantite Sword,0\r\nGold Sword,0\r\nMithril Sword,0\r\nObamium Sword,0\r\nSteel Sword,0\r\nChiefs Spear,0\r\nChunky Hammer,0\r\nGronks Sword,0\r\nNight Blade,0\r\nWyvern Dagger,0");
+
+        Logger.LogInfo("ARCHIPELAGO_Options.optlst");
+        File.WriteAllText("ARCHIPELAGO_Options.optlst", "allowLootAsLocations,0");
+
+        Logger.LogInfo("ARCHIPELAGO_Tools.itmlst");
+        File.WriteAllText("ARCHIPELAGO_Tools.itmlst", "weapons,0\r\nbows,0\r\naxes,0\r\npickaxes,0\r\nhelmets,0\r\nchestplates,0\r\nleggings,0\r\nboots,0");
+
+
+        await Task.Delay(3000);
+
+
+
         resetGivenPowerups();
         updateGivenPowerups(getPowerupsDict());
 
         resetGivenTools();
         updateGivenTools(getToolsDict());
+
+
+        //godMode();
+
 
         fullyHeal();
         
@@ -463,6 +473,70 @@ public class Plugin : BaseUnityPlugin
         return true;
 
     }
+
+    public void godMode()
+    {
+        giveUniqueItem("AncientCore", 1);
+        giveUniqueItem("Obamium Boots", 1);
+        giveUniqueItem("Obamium Helmet", 1);
+        giveUniqueItem("Obamium Pants", 1);
+        giveUniqueItem("Obamium Chestplate", 1);
+        giveUniqueItem("Chiefs Spear", 1);
+        giveUniqueItem("Meat Soup", 69);
+        giveUniqueItem("Adamantite bar", 69);
+        giveUniqueItem("Gold bar", 69);
+        giveUniqueItem("Iron bar", 150);
+        giveUniqueItem("Mithril bar", 69);
+        giveUniqueItem("Obamium bar", 69);
+        giveUniqueItem("Ruby", 69);
+        giveUniqueItem("Birch Wood", 69);
+        giveUniqueItem("Rock", 150);
+        giveUniqueItem("Dark Oak Wood", 69);
+        giveUniqueItem("Oak Wood", 69);
+        giveUniqueItem("Fir Wood", 69);
+        giveUniqueItem("Wood", 300);
+        giveUniqueItem("Blue Gem", 69);
+        giveUniqueItem("Green Gem", 69);
+        giveUniqueItem("Pink Gem", 69);
+        giveUniqueItem("Red Gem", 69);
+        giveUniqueItem("Yellow Gem", 69);
+        giveUniqueItem("Flax Fibers", 69);
+        giveUniqueItem("Rope", 69);
+        giveUniqueItem("Wheat", 69);
+        giveUniqueItem("Raw Meat", 69);
+
+
+        givenPowerups = new Dictionary<string, int>
+        {
+            { "Broccoli",-100 },
+            { "Dumbbell",-10000 },
+            { "Jetpack",-5 },
+            { "Orange Juice",-100 },
+            { "Peanut Butter",-100 },
+            { "Blue Pill",-100 },
+            { "Red Pill",-100 },
+            { "Sneaker",-100 },
+            { "Robin Hood Hat",-100 },
+            { "Spooo Bean",-100 },
+            { "Bulldozer",-100 },
+            { "Horseshoe",-100 },
+            { "Danis Milk",-100 },
+            { "Piggybank",-100 },
+            { "Crimson Dagger",-100 },
+            { "Dracula",-100 },
+            { "Janniks Frog",-100 },
+            { "Juice",-100 },
+            { "Adrenaline",-100 },
+            { "Berserk",-100 },
+            { "Checkered Shirt",-100 },
+            { "Sniper Scope",-100 },
+            { "Knuts Hammer",-100 },
+            { "Wings of Glory",-100 },
+            { "Enforcer",-100 }
+        };
+    }
+
+
 }
 
 
