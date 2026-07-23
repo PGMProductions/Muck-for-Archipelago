@@ -30,6 +30,9 @@ def create_all_regions(world: MuckWorld) -> None:
     regions.append(Region("Adamantite Tier", world.player, world.multiworld))
     regions.append(Region("Obamium Tier", world.player, world.multiworld))
     
+    regions.append(Region("Gold Tier", world.player, world.multiworld))
+    regions.append(Region("Bows", world.player, world.multiworld))
+    
     regions.append(Region("Post Bosses", world.player, world.multiworld))
     
     world.multiworld.regions += regions
@@ -51,9 +54,19 @@ def connect_regions(world: MuckWorld) -> None:
     mithrilTier = world.get_region("Mithril Tier")
     adamantiteTier = world.get_region("Adamantite Tier")
     obamiumTier = world.get_region("Obamium Tier")
+    
+    goldTier = world.get_region("Gold Tier")
+    bows = world.get_region("Bows")
+    
     postBoses = world.get_region("Post Bosses")
     
+    
+    
+    
     island.connect(woodTier,"Rock")
+    island.connect(goldTier,"Steel Pickaxe")
+    island.connect(bows,"Fletching Table")
+    
     woodTier.connect(steelTier,"Wooden Tools")
     steelTier.connect(mithrilTier, "Steel Tools")
     mithrilTier.connect(adamantiteTier,"Mithril Tools")

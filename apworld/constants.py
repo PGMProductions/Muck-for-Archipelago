@@ -6,92 +6,90 @@ MAXWHITEPERREGION = 50
 MAXBLUEPERREGION = 50
 MAXORANGEPERREGION = 50
 
-MAXWHITEPOWERUPLOCATIONS = MAXPOWERUPREGIONS*MAXWHITEPERREGION
-MAXBLUEPOWERUPLOCATIONS = MAXPOWERUPREGIONS*MAXBLUEPERREGION
-MAXORANGEPOWERUPLOCATIONS = MAXPOWERUPREGIONS*MAXORANGEPERREGION
+MAXWHITEPOWERUPLOCATIONS = MAXPOWERUPREGIONS * MAXWHITEPERREGION
+MAXBLUEPOWERUPLOCATIONS = MAXPOWERUPREGIONS * MAXBLUEPERREGION
+MAXORANGEPOWERUPLOCATIONS = MAXPOWERUPREGIONS * MAXORANGEPERREGION
 
 
-MuckOffset = 68000
-
-powerupsOffset = MuckOffset + 9000
-bluePowerupsOffset = powerupsOffset + MAXWHITEPOWERUPLOCATIONS
-orangePowerupsOffset = bluePowerupsOffset + MAXBLUEPOWERUPLOCATIONS
+powerupsOffset = 9000
+bluePowerupsOffset = MAXWHITEPOWERUPLOCATIONS + powerupsOffset
+orangePowerupsOffset = MAXBLUEPOWERUPLOCATIONS + bluePowerupsOffset
 
 LOCATION_NAME_TO_ID = {
-"Adamantite Pickaxe" : MuckOffset + 0,
-"Gold Pickaxe" : MuckOffset + 1,
-"Mithril Pickaxe" : MuckOffset + 2,
-"Steel Pickaxe" : MuckOffset + 3,
-"Wood Pickaxe" : MuckOffset + 4,
-"Oak Bow" : MuckOffset + 5,
-"Wood Bow" : MuckOffset + 6,
-"Birch bow" : MuckOffset + 7,
-"Fir bow" : MuckOffset + 8,
-"Ancient Bow" : MuckOffset + 9,
-"Adamantite Axe" : MuckOffset + 10,
-"Gold Axe" : MuckOffset + 11,
-"Mithril Axe" : MuckOffset + 12,
-"Steel Axe" : MuckOffset + 13,
-"Wood Axe" : MuckOffset + 14,
-"Adamantite Boots" : MuckOffset + 15,
-"Chunkium Boots" : MuckOffset + 16,
-"Gold Boots" : MuckOffset + 17,
-"Mithril Boots" : MuckOffset + 18,
-"Obamium Boots" : MuckOffset + 19,
-"Steel Boots" : MuckOffset + 20,
-"Wolfskin Boots" : MuckOffset + 21,
-"Adamantite Helmet" : MuckOffset + 22,
-"Chunkium Helmet" : MuckOffset + 23,
-"Gold Helmet" : MuckOffset + 24,
-"Mithril Helmet" : MuckOffset + 25,
-"Obamium Helmet" : MuckOffset + 26,
-"Steel Helmet" : MuckOffset + 27,
-"Wolfskin Helmet" : MuckOffset + 28,
-"Adamantite Pants" : MuckOffset + 29,
-"Chunkium Pants" : MuckOffset + 30,
-"Gold Pants" : MuckOffset + 31,
-"Mithril Pants" : MuckOffset + 32,
-"Obamium Pants" : MuckOffset + 33,
-"Steel Pants" : MuckOffset + 34,
-"Wolfskin Pants" : MuckOffset + 35,
-"Adamantite Chestplate" : MuckOffset + 36,
-"Chunkium Chestplate" : MuckOffset + 37,
-"Gold Chestplate" : MuckOffset + 38,
-"Mithril Chestplate" : MuckOffset + 39,
-"Obamium Chestplate" : MuckOffset + 40,
-"Steel Chestplate" : MuckOffset + 41,
-"Wolfskin Chestplate" : MuckOffset + 42,
-"Adamantite Sword" : MuckOffset + 43,
-"Gold Sword" : MuckOffset + 44,
-"Mithril Sword" : MuckOffset + 45,
-"Obamium Sword" : MuckOffset + 46,
-"Steel Sword" : MuckOffset + 47,
-"Chiefs Spear" : MuckOffset + 48,
-"Chunky Hammer" : MuckOffset + 49,
-"Gronks Sword" : MuckOffset + 50,
-"Night Blade" : MuckOffset + 51,
-"Wyvern Dagger" : MuckOffset + 52
+"Gold Pickaxe" : 1,
+"Mithril Pickaxe" : 2,
+"Steel Pickaxe" : 3,
+"Wood Pickaxe" : 4,
+"Oak Bow" : 5,
+"Wood Bow" : 6,
+"Birch bow" : 7,
+"Fir bow" : 8,
+"Ancient Bow" : 9,
+"Adamantite Axe" : 10,
+"Gold Axe" : 11,
+"Mithril Axe" : 12,
+"Steel Axe" : 13,
+"Wood Axe" : 14,
+"Adamantite Boots" : 15,
+"Chunkium Boots" : 16,
+"Gold Boots" : 17,
+"Mithril Boots" : 18,
+"Obamium Boots" : 19,
+"Steel Boots" : 20,
+"Wolfskin Boots" : 21,
+"Adamantite Helmet" : 22,
+"Chunkium Helmet" : 23,
+"Gold Helmet" : 24,
+"Mithril Helmet" : 25,
+"Obamium Helmet" : 26,
+"Steel Helmet" : 27,
+"Wolfskin Helmet" : 28,
+"Adamantite Pants" : 29,
+"Chunkium Pants" : 30,
+"Gold Pants" : 31,
+"Mithril Pants" : 32,
+"Obamium Pants" : 33,
+"Steel Pants" : 34,
+"Wolfskin Pants" : 35,
+"Adamantite Chestplate" : 36,
+"Chunkium Chestplate" : 37,
+"Gold Chestplate" : 38,
+"Mithril Chestplate" : 39,
+"Obamium Chestplate" : 40,
+"Steel Chestplate" : 41,
+"Wolfskin Chestplate" : 42,
+"Adamantite Sword" : 43,
+"Gold Sword" : 44,
+"Mithril Sword" : 45,
+"Obamium Sword" : 46,
+"Steel Sword" : 47,
+"Chiefs Spear" : 48,
+"Chunky Hammer" : 49,
+"Gronks Sword" : 50,
+"Night Blade" : 51,
+"Wyvern Dagger" : 52,
+"Adamantite Pickaxe" : 53
 }
 
 for i in range(MAXWHITEPOWERUPLOCATIONS):
-    LOCATION_NAME_TO_ID[f"White Powerup {i}"] = powerupsOffset + i
+    LOCATION_NAME_TO_ID[f"White Powerup {i+1}"] = powerupsOffset + i
 for i in range(MAXBLUEPOWERUPLOCATIONS):
-    LOCATION_NAME_TO_ID[f"Blue Powerup {i}"] = bluePowerupsOffset + i
+    LOCATION_NAME_TO_ID[f"Blue Powerup {i+1}"] = bluePowerupsOffset + i
 for i in range(MAXORANGEPOWERUPLOCATIONS):
-    LOCATION_NAME_TO_ID[f"Orange Powerup {i}"] = orangePowerupsOffset + i
-    
-    
-    
-ITEM_NAME_TO_ID = {
-"Progressive Weapon" : 0,
-"Progressive Bow" : 1,
-"Progressive Axe" : 2,
-"Progressive Pickaxe" : 3,
+    LOCATION_NAME_TO_ID[f"Orange Powerup {i+1}"] = orangePowerupsOffset + i
 
-"Progressive Helmet" : 4,
-"Progressive Chestplate" : 5,
-"Progressive Leggings" : 6,
-"Progressive Boots" : 7,
+
+
+ITEM_NAME_TO_ID = {
+"Progressive Weapon" : 1,
+"Progressive Bow" : 2,
+"Progressive Axe" : 3,
+"Progressive Pickaxe" : 4,
+
+"Progressive Helmet" : 5,
+"Progressive Chestplate" : 6,
+"Progressive Leggings" : 7,
+"Progressive Boots" : 8,
 
 "Broccoli" : 100,
 "Dumbbell" : 101,
@@ -165,7 +163,7 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
 "Wings of Glory" : ItemClassification.useful | ItemClassification.progression_deprioritized,
 "Enforcer" : ItemClassification.useful | ItemClassification.progression_deprioritized
 
-    }
+}
 
 
 

@@ -58,7 +58,20 @@ def set_all_rules(world: MuckWorld) -> None:
 
 
 def set_all_location_rules(world: MuckWorld) -> None:
-    pass
+    firBow = world.get_location("Fir bow")
+    oakBow = world.get_location("Oak Bow")
+    
+    world.set_rule(firBow,Has("Progressive Axe", count = 2))
+    world.set_rule(oakBow,Has("Progressive Axe", count = 3))
+    
+    
+    if world.options.includeLegendaryWeapons:
+        world.set_rule("Ancient Bow", canKillBosses())
+    
+    
+    
+    
+    
 
 
 def set_all_entrance_rules(world: MuckWorld) -> None:
@@ -69,7 +82,7 @@ def set_all_entrance_rules(world: MuckWorld) -> None:
     
     for i in range(world.options.nbPowerupRegions):
         entrance = world.get_entrance(f"to Powerup Region {i+1}")
-        rule: Rule = HasNPowerups(powerupsRequiredPerRegion*i) & HasNWeapons(i+1)
+        rule: Rule = HasNPowerups(powerupsRequiredPerRegion*i) &                         HasNWeapons(min(i,6))
         
         world.set_rule(entrance,rule)
     
@@ -78,12 +91,21 @@ def set_all_entrance_rules(world: MuckWorld) -> None:
     steelTool = world.get_entrance("Steel Tools")
     mithrilTool = world.get_entrance("Mithril Tools")
     adamantiteTool = world.get_entrance("Adamantite Tools")
+    
+    steelPickaxe = world.get_entrance("Steel Pickaxe")
+    fletching = world.get_entrance("Fletching Table")
+    
     postBosses = world.get_entrance("Can Kill Bosses")
+    
+    
     
     world.set_rule(woodTool,HasNTools(1))
     world.set_rule(steelTool,HasNTools(2))
     world.set_rule(mithrilTool,HasNTools(3))
     world.set_rule(adamantiteTool,HasNTools(4))
+    
+    world.set_rule(fletching,HasNTools(1))
+    world.set_rule(steelPickaxe,Has("Progressive Pickaxe", count = 2))
     
     world.set_rule(postBosses,canKillBosses(world))
     

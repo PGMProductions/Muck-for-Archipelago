@@ -20,11 +20,6 @@ class NumberWhitePowerupsPerRegion(Range):
     """
     How many white powerup pickup location to put in each region
     Note that the total ammount of white powerups you will need to pickup to get the whole location pool is Number Of Regions * Number Of Location Per Region
-    
-    I higly recommend you don't make your location pool too big or too small
-    Having too little can cause generation errors or leave you bked with all powerup locations quickly found
-    Having too many will add tons of filler powerups and you will easily become overpowered but you won't find your required items to finish the game
-    
     White powerup locations picked up after that won't give you anything
     """
     display_name = "Number Of White Powerup Location Per Region"
@@ -99,12 +94,12 @@ class Difficulty(Choice):
     """
     display_name = "Logic Difficulty"
 
-    option_easy = 3
-    option_normal = 2
-    option_hard = 1
-    option_none = 0
+    option_Easy = 3
+    option_Normal = 2
+    option_Hard = 1
+    option_None = 0
     
-    default = option_normal
+    default = option_Normal
 
 
 class IncludeExoticArmors(Toggle):
@@ -135,50 +130,69 @@ class Deathlink(Toggle):
     """
     Include deathlink
     """
+    display_name = "Deathlink"
+
+class StartingWeapon(Choice):
+    """
+    What weapon to start with to make the beggining more fun
+    If you choose None, you might have to farm your first powerup region with just a rock
+    """
+    display_name = "Starting Weapon"
+
+    option_Sword = 0
+    option_Bow = 1
+    option_Both = 2
+    option_None = 3
+    
+    default = option_Sword
+
+
+
+muck_option_groups = [
+    OptionGroup("Game Options",
+        [Difficulty]
+    ),
+    OptionGroup("Powerup Items Options",
+        [WhiteItemWeight,BlueItemWeight,OrangeItemWeight]
+    ),
+    OptionGroup("Locations Options",
+        [IncludeExoticArmors,IncludeLegendaryWeapons]
+    ),
+    OptionGroup("Powerup Locations Options",
+        [NumberOfPowerupsRegions,NumberWhitePowerupsPerRegion,NumberBluePowerupsPerRegion,NumberOrangePowerupsPerRegion]
+    ),
+    OptionGroup("Gameplay Options",
+        [AllowLootAsLocations,StartingWeapon]
+    )]
+
+
 
 
 @dataclass
 class MuckOptions(PerGameCommonOptions):
+    
     whitePowerupItemWeight: WhiteItemWeight
     bluePowerupItemWeight: BlueItemWeight
     orangePowerupItemWeight: OrangeItemWeight
+    
     
     nbPowerupRegions: NumberOfPowerupsRegions
     whitePerRegion: NumberWhitePowerupsPerRegion
     bluePerRegion: NumberBluePowerupsPerRegion
     orangePerRegion: NumberOrangePowerupsPerRegion
     
+    
     includeExoticArmors:IncludeExoticArmors
     includeLegendaryWeapons:IncludeLegendaryWeapons
     allowLootAsLocations: AllowLootAsLocations
     
+    
     logicDifficulty: Difficulty
     deathlink: Deathlink
+    startingWeapon: StartingWeapon
     
 
 
-option_groups = [
-    OptionGroup(
-        "Game Options",
-        [Difficulty],
-    ),
-    OptionGroup(
-        "Powerup Items Options",
-        [WhiteItemWeight,BlueItemWeight,OrangeItemWeight],
-    ),
-    OptionGroup(
-        "Locations Options",
-        [IncludeExoticArmors,IncludeLegendaryWeapons],
-    ),
-    OptionGroup(
-        "Powerup Locations Options",
-        [NumberOfPowerupsRegions,NumberWhitePowerupsPerRegion,NumberBluePowerupsPerRegion,NumberOrangePowerupsPerRegion],
-    ),
-    OptionGroup(
-        "Gameplay Options",
-        [AllowLootAsLocations],
-    ),
-]
 
     
     

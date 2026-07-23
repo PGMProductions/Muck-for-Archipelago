@@ -1,4 +1,4 @@
-from CommonClient import CommonContext as SuperContext, gui_enabled, ClientCommandProcessor, logger, get_base_parser, CommonContext, server_loop
+from CommonClient import CommonContext, gui_enabled, ClientCommandProcessor, logger, get_base_parser, CommonContext, server_loop
 import asyncio
 import typing
 import os
@@ -9,7 +9,8 @@ from NetUtils import NetworkItem
 
 from .constants import powerupsOffset,bluePowerupsOffset,orangePowerupsOffset,POWERUPSLIST,ID_TO_ITEM_NAME,ID_TO_LOCATION_NAME,LOCATION_NAME_TO_ID
 
-MUCK_FOLDER_PATH = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Muck"
+from .world import MuckWorld
+
 
 class MuckContext(CommonContext):
     tags = {"AP", "Online"}
@@ -64,6 +65,8 @@ class MuckContext(CommonContext):
     async def shutdown(self):
         resetFilesStates()
         await super().shutdown()
+
+    
     
     
     
@@ -81,7 +84,7 @@ class MuckContext(CommonContext):
 
     def on_deathlink(self, data: typing.Dict[str, typing.Any]):
         try:
-            with(open(MUCK_FOLDER_PATH + "\\receive.deathlink", "w") as f):
+            with(open(MuckWorld.settings.muckFolderPath + "\\receive.deathlink", "w") as f):
                 f.close()
         except:
             self.command_processor.output("Deathlink failed, sorry")
@@ -98,7 +101,7 @@ async def locations_checker(ctx: MuckContext):
         locations = []
         
         try:
-            with open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Locations.lctlst") as f:
+            with open(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Locations.lctlst") as f:
                 lines = f.readlines()
                 
             locations = []
@@ -107,13 +110,13 @@ async def locations_checker(ctx: MuckContext):
                 splitLine = l.rstrip('\n').split(",")
                 if int(splitLine[1]) > 0:
                     if splitLine[0] == "PowerupWhite":
-                        for i in range(1,int(splitLine[1])+1):
+                        for i in range(int(splitLine[1])):
                             locations.append(powerupsOffset + i)
                     elif splitLine[0] == "PowerupBlue":
-                        for i in range(1,int(splitLine[1])+1):
+                        for i in range(int(splitLine[1])):
                             locations.append(bluePowerupsOffset + i)
                     elif splitLine[0] == "PowerupOrange":
-                        for i in range(1,int(splitLine[1])+1):
+                        for i in range(int(splitLine[1])):
                             locations.append(orangePowerupsOffset + i)
                     
                     
@@ -229,7 +232,7 @@ async def items_checker(ctx: MuckContext):
         for powerup in POWERUPSLIST:
             powerupDict[powerup] = receivedItems.count(powerup)
         try:
-            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Powerups.itmlst","w")) as f:
+            with(open(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Powerups.itmlst","w")) as f:
                 for name,quantity in powerupDict.items():
                     if name != POWERUPSLIST[0]:
                         f.write("\n")
@@ -250,7 +253,7 @@ async def items_checker(ctx: MuckContext):
         
         
         try:
-            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Tools.itmlst","w")) as f:
+            with(open(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Tools.itmlst","w")) as f:
                 f.write(f"""weapons,{receivedWeapons}
 bows,{receivedBows}
 axes,{receivedAxes}
@@ -269,24 +272,26 @@ boots,{receivedboots}""")
 
 
 async def other_loop(ctx: MuckContext):
+    victory = False
     while not ctx.exit_event.is_set():
 
         await ctx.update_death_link(ctx.deathlink)
         
         if ctx.deathlink:
             try:
-                with(open(MUCK_FOLDER_PATH + "\\send.deathlink","r")) as f:
+                with(open(MuckWorld.settings.muckFolderPath + "\\send.deathlink","r")) as f:
                     await ctx.send_death(f"{ctx.player_names[ctx.slot]} got MUCKED too hard")
                 
-                os.remove(MUCK_FOLDER_PATH + "\\send.deathlink")
+                os.remove(MuckWorld.settings.muckFolderPath + "\\send.deathlink")
             except:
                 pass
         
         try:
-            with(open(MUCK_FOLDER_PATH + "\\victory","r")) as f:
+            with(open(MuckWorld.settings.muckFolderPath + "\\victory","r")) as f:
                 ctx.finished_game = True
+                
             
-            os.remove(MUCK_FOLDER_PATH + "\\victory")
+            os.remove(MuckWorld.settings.muckFolderPath + "\\victory")
             
             
         except:
@@ -295,7 +300,7 @@ async def other_loop(ctx: MuckContext):
         
         try:
             
-            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Options.optlst","w")) as f:
+            with(open(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Options.optlst","w")) as f:
                 
                 if ctx.allowLootAsLocations == 1:
                     f.write("allowLootAsLocations,1")
@@ -304,34 +309,38 @@ async def other_loop(ctx: MuckContext):
 
         except:
             pass
-    
+        
+        print(ctx.finished_game)
+        if ctx.finished_game == True:
+            ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+            ctx.finished_game = False
+        
+        
         await asyncio.sleep(3)
         
 
 
-
-
-
-
-def resetPowerupDict():
-    with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Powerups.itmlst","w")) as f:
-        for powerup in POWERUPSLIST:
-            if powerup != POWERUPSLIST[0]:
-                f.write("\n")
-            f.write(f"{powerup},0")
         
 
-def setLocationsFile(locationDict = {"PowerupWhite" : 0, "PowerupBlue" : 0, "PowerupOrange" : 0}):
-    with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Locations.lctlst","w")) as f:
+def setLocationsFile(locationDict):
+    with(open(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Locations.lctlst","w")) as f:
         for name,quantity in locationDict.items():
             if name != "PowerupWhite":
                 f.write("\n")
             f.write(f"{name},{quantity}")
 
 
+
+
+
 def resetFilesStates():
-    resetPowerupDict()
-    setLocationsFile()
+    try:
+        os.remove(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Powerups.itmlst")
+        os.remove(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Tools.itmlst")
+        os.remove(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Options.optlst")
+        os.remove(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Locations.lctlst")
+    except:
+        pass
 
 def list_received_items(ctx: MuckContext):
     """returns a list of the names off all the items received (non unique)"""
@@ -351,15 +360,13 @@ def list_received_items(ctx: MuckContext):
 
     
 async def startMuckClient(launch_args):
-    
-    global MUCK_FOLDER_PATH
+
     folderFound = False
     while not folderFound:
-        try:
-            with(open(MUCK_FOLDER_PATH + "\\ARCHIPELAGO_Powerups.itmlst","r") as f):
-                folderFound = True 
-        except:
-            MUCK_FOLDER_PATH = filedialog.askdirectory(title="Choose Muck Folder")
+        if os.path.isfile(MuckWorld.settings.muckFolderPath + "\\Muck.exe") or os.path.isfile(MuckWorld.settings.muckFolderPath + "\\ARCHIPELAGO_Powerups.itmlst"):
+            folderFound = True 
+        else:
+            MuckWorld.settings.muckFolderPath = filedialog.askdirectory(title="Choose Muck Folder")
 
 
     ctx = MuckContext(None, None)

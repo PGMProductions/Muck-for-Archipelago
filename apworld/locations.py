@@ -36,6 +36,9 @@ def create_items_locations(world: MuckWorld) -> None:
     adamantiteTier = world.get_region("Adamantite Tier")
     obamiumTier = world.get_region("Obamium Tier")
     
+    bows = world.get_region("Bows")
+    goldTier  = world.get_region("Gold Tier")
+    
     postBosses = world.get_region("Post Bosses")
     
     if world.options.includeExoticArmors:
@@ -45,15 +48,20 @@ def create_items_locations(world: MuckWorld) -> None:
     if world.options.includeLegendaryWeapons:
         adamantiteTier.add_locations(get_location_names_with_ids(["Wyvern Dagger"]))
         obamiumTier.add_locations(get_location_names_with_ids(["Chiefs Spear","Gronks Sword","Night Blade"]))
-        postBosses.add_locations(get_location_names_with_ids(["Chunky Hammer","Ancient Bow"]))
+        postBosses.add_locations(get_location_names_with_ids(["Chunky Hammer"]))
+        
+        bows.add_locations(get_location_names_with_ids(["Ancient Bow"]))
     
     
     
-    woodTier.add_locations(get_location_names_with_ids(["Wood Pickaxe","Wood Axe","Wood Bow"]))
-    steelTier.add_locations(get_location_names_with_ids(["Steel Pickaxe","Steel Axe","Steel Helmet","Steel Pants","Steel Boots","Steel Chestplate","Steel Sword","Gold Pickaxe","Gold Axe","Gold Helmet","Gold Pants","Gold Boots","Gold Chestplate","Gold Sword","Birch bow"]))
-    mithrilTier.add_locations(get_location_names_with_ids(["Mithril Pickaxe","Mithril Axe","Mithril Helmet","Mithril Pants","Mithril Boots","Mithril Chestplate","Mithril Sword","Fir bow"]))
-    adamantiteTier.add_locations(get_location_names_with_ids(["Adamantite Pickaxe","Adamantite Axe","Adamantite Helmet","Adamantite Pants","Adamantite Boots","Adamantite Chestplate","Adamantite Sword","Oak Bow"]))
+    woodTier.add_locations(get_location_names_with_ids(["Wood Pickaxe","Wood Axe"]))
+    steelTier.add_locations(get_location_names_with_ids(["Steel Pickaxe","Steel Axe","Steel Helmet","Steel Pants","Steel Boots","Steel Chestplate","Steel Sword"]))
+    mithrilTier.add_locations(get_location_names_with_ids(["Mithril Pickaxe","Mithril Axe","Mithril Helmet","Mithril Pants","Mithril Boots","Mithril Chestplate","Mithril Sword"]))
+    adamantiteTier.add_locations(get_location_names_with_ids(["Adamantite Pickaxe","Adamantite Axe","Adamantite Helmet","Adamantite Pants","Adamantite Boots","Adamantite Chestplate","Adamantite Sword"]))
     obamiumTier.add_locations(get_location_names_with_ids(["Obamium Helmet","Obamium Pants","Obamium Boots","Obamium Chestplate","Obamium Sword"]))
+    
+    bows.add_locations(get_location_names_with_ids(["Wood Bow","Birch bow","Fir bow","Oak Bow"]))
+    goldTier.add_locations(get_location_names_with_ids(["Gold Pickaxe","Gold Axe","Gold Helmet","Gold Pants","Gold Boots","Gold Chestplate","Gold Sword"]))
 
 
 def create_powerups_locations(world: MuckWorld) -> None:

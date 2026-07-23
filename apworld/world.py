@@ -1,11 +1,28 @@
 from collections.abc import Mapping
 from typing import Any
+import settings
 
 from . import items, locations, regions, rules
 
 from . import options as muck_options
 
-from worlds.AutoWorld import World
+from worlds.AutoWorld import World,WebWorld
+
+
+
+
+class MuckWebWorld(WebWorld):
+    option_groups = muck_options.muck_option_groups
+
+
+
+class MuckSettings(settings.Group):
+    class MuckFolderPath(settings.UserFolderPath):
+        """The path of the Muck folder (the folder with the Muck.exe and all the communication files)"""
+
+    muckFolderPath: MuckFolderPath = MuckFolderPath("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Muck")
+
+
 
 class MuckWorld(World):
     """
@@ -24,7 +41,11 @@ class MuckWorld(World):
     options_dataclass = muck_options.MuckOptions
     options: muck_options.MuckOptions
     
-    base_id = 68000
+    
+    settings: MuckSettings
+    
+    web = MuckWebWorld()
+
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)

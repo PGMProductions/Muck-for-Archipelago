@@ -50,8 +50,22 @@ def create_item_with_correct_classification(world: APQuestWorld, name: str) -> A
 def create_all_items(world: MuckWorld) -> None:
     itempool: list[Item] = []
     
-    itempool += [world.create_item("Progressive Weapon") for _ in range(10)]
-    itempool += [world.create_item("Progressive Bow") for _ in range(5)]
+    giveSword = world.options.startingWeapon == 0 or world.options.startingWeapon == 2
+    giveBow  = world.options.startingWeapon == 1 or world.options.startingWeapon == 2
+
+    if giveSword:
+        swordAmmount = 9
+    else:
+        swordAmmount = 10
+    
+    if giveBow:
+        bowAmmount = 4
+    else:
+        bowAmmount = 5
+    
+    
+    itempool += [world.create_item("Progressive Weapon") for _ in range(swordAmmount)]
+    itempool += [world.create_item("Progressive Bow") for _ in range(bowAmmount)]
     itempool += [world.create_item("Progressive Axe") for _ in range(4)]
     itempool += [world.create_item("Progressive Pickaxe") for _ in range(4)]
     
@@ -71,6 +85,11 @@ def create_all_items(world: MuckWorld) -> None:
     itempool += [world.create_filler() for _ in range(needed_number_of_filler_items)]
     
     world.multiworld.itempool += itempool
-
-
-
+    
+    if giveSword:
+        startingSword = world.create_item("Progressive Weapon")
+        world.push_precollected(startingSword)
+        
+    if giveBow:
+        startingBow = world.create_item("Progressive Bow")
+        world.push_precollected(startingBow)
