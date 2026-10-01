@@ -9,6 +9,12 @@
 3) restart the launcher
 4) You should now have a client for muck that you can use to connect to games and that will communicate with the mod
 
+## Connecting to a game
+1) Go into your Archipelago Launcher and launch "Muck Client" (if you can't find it, look right above)
+2) You might have a popup asking for the Muck folder, if you do, chose the folder that contains you Muck.exe (if it still doesn't work and you're on Linux/Mac, sorry about that but it won't work for you, consider using Windows)
+3) Connect the client to the game like you would with any text client
+4) Start Muck with the mod loaded, the game and the client will automatically communicate
+
 ## When playing
 Multiplayer is not supported yet, you should be the only player in the lobby
 
